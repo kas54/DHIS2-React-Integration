@@ -1,1 +1,1 @@
-echo # DHIS2-React-Integration
+#DHIS2-React-Integration
