@@ -1,34 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { fetchProgram, createEvent } from "./api/api";
+import DynamicEventForm from "./components/EventEntryForm";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [program, setProgram] = useState<any>(null);
+
+  useEffect(() => {
+    fetchProgram()
+      .then(setProgram)
+      .catch((err) => {
+        console.error(err);
+        alert("Failed to load program");
+      });
+  }, []);
+
+  async function handleSubmit(dataValues: any[]) {
+    await createEvent(dataValues);
+    //alert("Event Data saved in DHIS2");
+  }
+
+  if (!program) return <p>Loading program...</p>;
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div style={{ padding: 20 }}>
+      <DynamicEventForm program={program} onSubmit={handleSubmit} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
