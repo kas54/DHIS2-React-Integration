@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// these config set in a .env file - not committed to the repo
 const BASE_URL = import.meta.env.VITE_DHIS2_BASE_URL;
 const USERNAME = import.meta.env.VITE_DHIS2_USERNAME;
 const PASSWORD = import.meta.env.VITE_DHIS2_PASSWORD;
