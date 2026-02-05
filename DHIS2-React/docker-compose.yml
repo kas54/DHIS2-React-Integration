@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  dhis2-db:
+    image: postgis/postgis:15-3.3
+    container_name: dhis2-db
+    environment:
+      POSTGRES_DB: dhis2
+      POSTGRES_USER: dhis
+      POSTGRES_PASSWORD: dhis
+    volumes:
+      - dhis2-db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  dhis2:
+    image: dhis2/core:2.40.8
+    container_name: dhis2-core
+    depends_on:
+      - dhis2-db
+    environment:
+      JAVA_OPTS: "-Xmx2G -Xms1G"
+      DHIS2_CORS_ENABLED: "true"
+      DHIS2_CORS_ALLOWED_ORIGINS: "http://localhost:5173/"
+      DHIS2_CORS_ALLOWED_METHODS: "GET,POST,PUT,DELETE,OPTIONS"
+      DHIS2_CORS_ALLOWED_HEADERS: "Authorization,Content-Type"
+    volumes:
+      - ./dhis.conf:/opt/dhis2/dhis.conf
+    ports:
+      - "8080:8080"
+
+volumes:
+  dhis2-db-data:
